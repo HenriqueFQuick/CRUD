@@ -1,43 +1,84 @@
 import java.io.*;
-class Arquivo{
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+
+public class Arquivo<G extends Entidade>{
 
     protected RandomAccessFile raf;
-    protected RandomAccessFile raf2;
+    protected RandomAccessFile indice;
     protected String nome_Arquivo;
+    protected Constructor<G> construtor;
 
-    public Arquivo(String nome_Arquivo)throws Exception{
+    public Arquivo( Constructor<G> c, String nome_Arquivo)throws Exception{
         this.nome_Arquivo = nome_Arquivo;
+        this.construtor = c;
         this.raf          = new RandomAccessFile(nome_Arquivo, "rw");
-        this.raf2         = new RandomAccessFile("indice.db",  "rw");
+        this.indice       = new RandomAccessFile("indice.db",  "rw");
         if(raf.length() < 4){
             raf.writeInt(0);
+            //apagar indice
         }
     } 
 
-    public void escrever(Produto produto)throws Exception{
+    public void inserir(G objeto)throws Exception{
         int ultimoID = 0;
         raf.seek(0);
         ultimoID = raf.readInt();
-        produto.setID(ultimoID+1);      
+        raf.seek(0);
+        objeto.setID(ultimoID+1);      
 
-        raf2.seek(raf2.length());
-        raf2.writeInt(produto.getID());
-        raf2.writeLong(raf.length());
-    
         raf.seek(raf.length());
-        byte[] b = produto.toByteArray();
+        byte[] b = objeto.toByteArray();
         raf.writeByte(' ');
         raf.writeShort(b.length);
         raf.write(b);
 
+        indice.seek(indice.length());
+        indice.writeInt(objeto.getID());
+        indice.writeLong(raf.length());
+
         raf.seek(0);
-        raf.write(produto.getID());
+        raf.write(objeto.getID());
 
 
     }
 
-    public void ler()throws Exception{
-        Produto p = new Produto();
+    public G pesquisarI(int idqr)throws Exception{
+        raf.seek(0);
+        G objeto = null;
+        int i = raf.readInt();
+        if(i >= idqr){
+            long pos = buscaI(i, 0, idqr);
+            raf.seek(pos);
+            byte lapide = raf.readByte();
+            int tamanho = raf.readShort();
+            byte[] b = new byte[tamanho];
+            objeto = construtor.newInstance();
+            if(lapide == ' '){
+                raf.read(b);
+                objeto.fromByteArray(b);
+            }
+        }
+        return objeto;
+    }
+
+    public long buscaI(int dir, int esq, int idqr)throws Exception{
+        long ultimo   = (dir/2)*12;
+        long primeiro = (esq/2)*12;
+        long metade   = ((esq+dir)/2)*12;
+
+        indice.seek(metade);
+        int a = indice.readInt();
+        if(a == idqr){
+            return indice.readLong();
+        }else if( a < idqr){ buscaI(dir, ((esq+dir)/2) + 1, idqr);
+              }else buscaI(((esq+dir)/2) -1, esq, idqr);
+        return 0;
+    }
+
+    public ArrayList<G> toList()throws Exception{
+        G objeto;
+        ArrayList<G> lista = new ArrayList();
         short tamanho;
         byte[] b;
         byte lapide;
@@ -48,9 +89,39 @@ class Arquivo{
             tamanho = raf.readShort();
             b = new byte[tamanho];
             raf.read(b);
-            p.fromByteArray(b);
-            System.out.println(p);
+            objeto = construtor.newInstance();
+            objeto.fromByteArray(b);
+            if(lapide == ' '){
+                lista.add(objeto);
+            }
+            
         }
+        return lista;
+    }
+
+    public void remover(int idqr)throws Exception{
+        raf.seek(0);
+        int i = raf.readInt();
+        if(i >= idqr){
+            long pos = buscaI(i, 0, idqr);
+            raf.seek(pos);
+            byte lapide = raf.readByte();
+            if(lapide == ' '){
+                raf.seek(pos);
+                raf.writeByte('*');
+                System.out.println("Removido com sucesso");
+            }else System.out.println("Produto foi removido anteriormente");
+        }else System.out.println("Produto inexistente");
+    }
+
+    public void alterar(int idqr, G objeto)throws Exception{
+        raf.seek(0);
+        int i = raf.readInt();
+        if(i >= idqr){
+            this.remover(idqr);
+            this.inserir(objeto);
+            System.out.println("Novo ID: " + i);
+        }else System.out.println("Produto inexistente");
     }
 
 }

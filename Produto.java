@@ -1,5 +1,5 @@
 import java.io.*;
-class Produto{
+class Produto implements Entidade{
 
     protected int    idProduto;
     protected String nome_Produto;
