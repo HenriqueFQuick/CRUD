@@ -21,24 +21,29 @@ public class Arquivo<G extends Entidade>{
     } 
 
     public void inserir(G objeto)throws Exception{
-        int ultimoID = 0;
+        int ultimoID;
         raf.seek(0);
         ultimoID = raf.readInt();
         raf.seek(0);
         objeto.setID(ultimoID+1);      
+        
+        
 
+        indice.seek(indice.length());
+        indice.writeInt(objeto.getID());
+        indice.writeLong(raf.length());
+        
         raf.seek(raf.length());
         byte[] b = objeto.toByteArray();
         raf.writeByte(' ');
         raf.writeShort(b.length);
         raf.write(b);
 
-        indice.seek(indice.length());
-        indice.writeInt(objeto.getID());
-        indice.writeLong(raf.length());
-
         raf.seek(0);
-        raf.write(objeto.getID());
+        raf.writeInt(objeto.getID());
+        raf.seek(0);
+        ultimoID = raf.readInt();
+        System.out.println(ultimoID);
 
 
     }
@@ -47,8 +52,9 @@ public class Arquivo<G extends Entidade>{
         raf.seek(0);
         G objeto = null;
         int i = raf.readInt();
+        //System.out.println(i);
         if(i >= idqr){
-            long pos = buscaI(i, 0, idqr);
+            long pos = buscaI(i, 1, idqr);
             raf.seek(pos);
             byte lapide = raf.readByte();
             int tamanho = raf.readShort();
@@ -59,17 +65,25 @@ public class Arquivo<G extends Entidade>{
                 objeto.fromByteArray(b);
             }
         }
+        raf.close();
         return objeto;
     }
 
     public long buscaI(int dir, int esq, int idqr)throws Exception{
         long ultimo   = (dir/2)*12;
         long primeiro = (esq/2)*12;
-        long metade   = ((esq+dir)/2)*12;
-
+        long metade   = ((esq/2)+(dir/2))*12;
+        /*System.out.println(esq);
+        System.out.println(dir);
+        System.out.println(primeiro);
+        System.out.println(ultimo);
+        System.out.println(metade);*/
         indice.seek(metade);
+       // System.out.println("AKI 2");
         int a = indice.readInt();
+       // System.out.println("Aki 3");
         if(a == idqr){
+        //    System.out.println("Aki4");
             return indice.readLong();
         }else if( a < idqr){ buscaI(dir, ((esq+dir)/2) + 1, idqr);
               }else buscaI(((esq+dir)/2) -1, esq, idqr);
