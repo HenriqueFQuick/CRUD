@@ -57,12 +57,15 @@ public class Principal{
                 break;
                 case 3:
                     System.out.println("Consultar produto");
-                    System.out.println("ID do produto a ser consultado: ");
+                    System.out.print("ID do produto a ser consultado: ");
                     id = read.nextInt();
                     Produto p = arq.pesquisarI(id);
-                    System.out.println(p);
+                    if (p != null){
+                        System.out.println(p);
+                    }
+                    else System.out.println("Produto não encontrado!");
                 break;
-                default:
+                default:                    
                     System.out.println("Opcao invalida");
                     
                 break;

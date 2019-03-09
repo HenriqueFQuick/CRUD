@@ -63,6 +63,6 @@ class Produto implements Entidade{
     }
 
     public String toString(){
-        return "Id: " + this.idProduto+" \nNome: " + this.nome_Produto+"\nDescricao:  " + this.descricao+"\nPreco: " + this.preco+ "\nMarca: " + this.marca+"\nOrigem:" + this.origem;
+        return "Id: " + this.idProduto+" \nNome: " + this.nome_Produto+"\nDescricao: " + this.descricao+"\nPreco: " + this.preco+ "\nMarca: " + this.marca+"\nOrigem: " + this.origem;
     }
 }
