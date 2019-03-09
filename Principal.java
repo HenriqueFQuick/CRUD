@@ -13,7 +13,7 @@ public class Principal{
             do{
                 //menu
                 System.out.println("\n\t*** MENU ***");
-                System.out.println("0 - Adicionar produto\n1 - Remover produto\n2 - Alterar produto\n3 - Consutar produto\n4 - Sair");
+                System.out.println("0 - Adicionar produto\n1 - Remover produto\n2 - Alterar produto\n3 - Consultar produto\n4 - Sair");
                 System.out.print("Digite a opção: ");
                 int opcao = read.nextInt();
                 System.out.println();
