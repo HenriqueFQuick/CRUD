@@ -26,8 +26,6 @@ public class Arquivo<G extends Entidade>{
         ultimoID = raf.readInt();
         raf.seek(0);
         objeto.setID(ultimoID+1);      
-        
-        
 
         indice.seek(indice.length());
         indice.writeInt(objeto.getID());
@@ -44,9 +42,7 @@ public class Arquivo<G extends Entidade>{
         raf.seek(0);
         ultimoID = raf.readInt();
         System.out.println(ultimoID);
-
-
-    }
+    } 
 
     public G pesquisarI(int idqr)throws Exception{
         raf.seek(0);
@@ -85,8 +81,9 @@ public class Arquivo<G extends Entidade>{
         if(a == idqr){
         //    System.out.println("Aki4");
             return indice.readLong();
-        }else if( a < idqr){ buscaI(dir, ((esq+dir)/2) + 1, idqr);
-              }else buscaI(((esq+dir)/2) -1, esq, idqr);
+        }
+        else if( a < idqr) buscaI(dir, ((esq+dir)/2) + 1, idqr);
+        else buscaI(((esq+dir)/2) -1, esq, idqr);
         return 0;
     }
 
@@ -105,10 +102,7 @@ public class Arquivo<G extends Entidade>{
             raf.read(b);
             objeto = construtor.newInstance();
             objeto.fromByteArray(b);
-            if(lapide == ' '){
-                lista.add(objeto);
-            }
-            
+            if (lapide == ' ') lista.add(objeto);
         }
         return lista;
     }
@@ -125,7 +119,8 @@ public class Arquivo<G extends Entidade>{
                 raf.writeByte('*');
                 System.out.println("Removido com sucesso");
             }else System.out.println("Produto foi removido anteriormente");
-        }else System.out.println("Produto inexistente");
+        }
+        else System.out.println("Produto inexistente");
     }
 
     public void alterar(int idqr, G objeto)throws Exception{
@@ -135,7 +130,8 @@ public class Arquivo<G extends Entidade>{
             this.remover(idqr);
             this.inserir(objeto);
             System.out.println("Novo ID: " + i);
-        }else System.out.println("Produto inexistente");
+        }
+        else System.out.println("Produto inexistente");
     }
 
 }
