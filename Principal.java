@@ -7,8 +7,8 @@ public class Principal{
         try{
             arq = new Arquivo<>(Produto.class.getConstructor(), "jonathan.db");
             //menu
-            System.out.println("Adicionar produto: 0\nRemover   produto: 1\nAlterar   produto: 2\nConsutar  produto: 3");
-
+            System.out.println("0 - Adicionar produto\n1 - Remover produto\n2 - Alterar produto\n3 - Consutar produto");
+            System.out.print("Digite a opção: ");
             int opcao = read.nextInt();
 
             switch (opcao){

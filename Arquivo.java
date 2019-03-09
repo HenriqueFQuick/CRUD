@@ -92,7 +92,7 @@ public class Arquivo<G extends Entidade>{
 
     public ArrayList<G> toList()throws Exception{
         G objeto;
-        ArrayList<G> lista = new ArrayList();
+        ArrayList<G> lista = new ArrayList<G>();
         short tamanho;
         byte[] b;
         byte lapide;
