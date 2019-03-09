@@ -6,6 +6,7 @@ public class Principal{
         String nome, descricao, marca, origem;
         float preco;
         int id;
+        boolean erro;
         Arquivo<Produto> arq;
         try{
             arq = new Arquivo<>(Produto.class.getConstructor(), "jonathan.db");
@@ -63,9 +64,16 @@ public class Principal{
 
                     case 3:
                         System.out.println("\t** Consultar produto **\n");
-                        System.out.print("ID do produto a ser consultado: ");
-                        id = read.nextInt();
-                        System.out.println();
+                        do{
+                            erro = false;
+                            System.out.print("ID do produto a ser consultado: ");
+                            id = read.nextInt();
+                            if(id <= 0){
+                                erro = true;
+                                System.out.println("ID Inválida! ");
+                            }
+                            System.out.println();
+                        } while(erro);
                         Produto p = arq.pesquisarI(id);
                         if (p != null){
                             System.out.println(p);
@@ -81,6 +89,7 @@ public class Principal{
                         break;
                 }
             }while(!fecharMenu);
+            arq.close();
         } 
         catch(Exception e){
             e.printStackTrace();

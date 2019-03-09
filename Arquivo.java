@@ -18,7 +18,12 @@ public class Arquivo<G extends Entidade>{
             raf.writeInt(0);
             //apagar indice
         }
-    } 
+    }
+
+    public void close() throws Exception {
+        raf.close();
+        indice.close();
+    }
 
     public void inserir(G objeto)throws Exception{
         int ultimoID;
@@ -61,7 +66,6 @@ public class Arquivo<G extends Entidade>{
                 objeto.fromByteArray(b);
             }
         }
-        raf.close();
         return objeto;
     }
 
