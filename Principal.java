@@ -75,7 +75,7 @@ public class Principal{
                             System.out.println();
                         } while(erro);
                         Produto p = arq.pesquisarI(id);
-                        if (p != null){
+                        if (p != null && p.idProduto != -1 ){
                             System.out.println(p);
                         }
                         else System.out.println("Produto não encontrado!");
