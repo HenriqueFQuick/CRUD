@@ -40,7 +40,7 @@ public class Principal{
                         System.out.println("\t** Remover produto **\n");
                         System.out.print("ID do produto a ser removido: ");
                         id = read.nextInt();
-                        arq.remover(id);
+                        boolean removeu = arq.remover(id);
                         break;
 
                     case 2:

@@ -111,7 +111,7 @@ public class Arquivo<G extends Entidade>{
         return lista;
     }
 
-    public void remover(int idqr)throws Exception{
+    public boolean remover(int idqr)throws Exception{
         raf.seek(0);
         int i = raf.readInt();
         if(i >= idqr){
@@ -122,18 +122,28 @@ public class Arquivo<G extends Entidade>{
                 raf.seek(pos);
                 raf.writeByte('*');
                 System.out.println("Removido com sucesso");
-            }else System.out.println("Produto foi removido anteriormente");
+                return true;
+            }else{ 
+               System.out.println("Produto foi removido anteriormente");
+               return false;
+               }
         }
-        else System.out.println("Produto inexistente");
+        else {
+            System.out.println("Produto inexistente");
+            return false;
+         }
     }
 
     public void alterar(int idqr, G objeto)throws Exception{
+        boolean removeu;
         raf.seek(0);
         int i = raf.readInt();
         if(i >= idqr){
-            this.remover(idqr);
-            this.inserir(objeto);
-            System.out.println("Novo ID: " + i);
+            removeu = this.remover(idqr);
+            if(removeu){
+               this.inserir(objeto);
+               System.out.println("Novo ID: " + i);
+            }
         }
         else System.out.println("Produto inexistente");
     }
