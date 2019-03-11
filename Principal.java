@@ -22,6 +22,7 @@ public class Principal{
                 System.out.println();
                 switch (opcao){
                     case 0:
+                        //inserir produto
                         System.out.println("\t** Adicionar produto **\n");
                         System.out.print("Nome do produto: ");
                         nome = read.nextLine();
@@ -56,6 +57,7 @@ public class Principal{
                         break;
 
                     case 1:
+                        //remover o produto
                         System.out.println("\t** Remover produto **\n");
                         System.out.print("ID do produto a ser removido: ");
                         id = read.nextInt();
@@ -81,6 +83,7 @@ public class Principal{
                         break;
 
                     case 2:
+                        //alterar o produto pelo ID
                         System.out.println("\t** Alterar produto **\n");
                         do{
                             erro = false;
@@ -126,6 +129,7 @@ public class Principal{
                         break;
 
                     case 3:
+                        //Pesquisar determinado produto pelo id
                         System.out.println("\t** Consultar produto **\n");
                         do{
                             erro = false;
@@ -144,6 +148,7 @@ public class Principal{
                         else System.out.println("Produto não encontrado!");
                         break;
                     case 4:
+                        //Listar os produtos
                         System.out.println("\t** Lista dos produtos cadastrados **\n");
                         for(int i = 1; i <= arq.ultimoID(); i++){
                             p = arq.pesquisar(i);
@@ -164,9 +169,9 @@ public class Principal{
                 }
             }while(!fecharMenu);
             arq.close();
-        } 
+        }//end try 
         catch(Exception e){
             e.printStackTrace();
-        }
-    }
-}
+        }//end catch
+    }//end main
+}//end Principal

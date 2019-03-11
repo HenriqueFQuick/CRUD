@@ -8,6 +8,7 @@ class Produto implements Entidade{
     protected String marca;
     protected String origem; 
 
+    //Construtor vazio
     public Produto(){
         this.idProduto    = -1;
         this.nome_Produto = "";
@@ -15,25 +16,27 @@ class Produto implements Entidade{
         this.preco        = 0;
         this.marca        = "";
         this.origem       = "";
-    }
+    }//end Produto 
 
     public void setID(int id){
         this.idProduto = id;
-    }
+    }//end setId
 
     public int getID(){
         return this.idProduto;
-    }
+    }//end getId
 
+
+    //construtor com parametros
     public Produto(String nome_Produto, String descricao, float preco, String marca, String origem){
         this.nome_Produto = nome_Produto;
         this.descricao    = descricao;
         this.preco        = preco;
         this.marca        = marca;
         this.origem       = origem;
+    }//end Produto
 
-    }
-
+    //Retorna um arrayde bytes com os bytes para escrever no arquivo
     public byte[] toByteArray() throws Exception{
         ByteArrayOutputStream dados = new ByteArrayOutputStream();
         DataOutputStream saida = new DataOutputStream(dados);
@@ -46,8 +49,9 @@ class Produto implements Entidade{
         saida.writeUTF(this.origem);
 
         return dados.toByteArray();
-    }
+    }//end toByteArray
 
+    //Coloca nos atributos os bytes lidos doa arquivo
     public void fromByteArray(byte[] b) throws Exception {
         ByteArrayInputStream dados   = new ByteArrayInputStream(b);
         DataInputStream      entrada = new DataInputStream(dados);
@@ -60,7 +64,7 @@ class Produto implements Entidade{
         this.origem       = entrada.readUTF();
 
         entrada.close();
-    }
+    }//end fromByteArray
 
     public String toString(){
         return "Id: "           + this.idProduto    + 
@@ -69,5 +73,5 @@ class Produto implements Entidade{
                 "\nPreco: "     + this.preco        + 
                 "\nMarca: "     + this.marca        + 
                 "\nOrigem: "    + this.origem;
-    }
-}
+    }//end toString
+}//end Produto
