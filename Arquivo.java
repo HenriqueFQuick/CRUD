@@ -64,8 +64,8 @@ public class Arquivo<G extends Entidade>{
                 byte lapide = raf.readByte();
                 int tamanho = raf.readShort();
                 byte[] b = new byte[tamanho];
-                objeto = construtor.newInstance();
                 if(lapide == ' '){
+                    objeto = construtor.newInstance();
                     raf.read(b);
                     objeto.fromByteArray(b);
                 }  

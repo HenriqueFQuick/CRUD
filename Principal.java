@@ -11,7 +11,7 @@ public class Principal{
         boolean result;
         Arquivo<Produto> arq;
         try{
-            arq = new Arquivo<>(Produto.class.getConstructor(), "jonathan");
+            arq = new Arquivo<>(Produto.class.getConstructor(), "Produto");
             boolean fecharMenu = false;
             do{
                 //menu
