@@ -108,16 +108,22 @@ public class Arquivo<G extends Entidade>{
         int i = raf.readInt();
         if(i >= idqr){
             long pos = buscaI(idqr, 0, i);
-            raf.seek(pos);
-            byte lapide = raf.readByte();
-            if(lapide == ' '){
+            if (pos != -1){
                 raf.seek(pos);
-                raf.writeByte('*');
-                System.out.println("Removido com sucesso");
-                return true;
-            }else{ 
+                byte lapide = raf.readByte();
+                if(lapide == ' '){
+                    raf.seek(pos);
+                    raf.writeByte('*');
+                    System.out.println("Removido com sucesso");
+                    return true;
+                }else{ 
+                    System.out.println("Produto foi removido anteriormente");
+                    return false;
+                }
+            }
+            else {
                 System.out.println("Produto foi removido anteriormente");
-                return false;
+                return false; 
             }
         }
         else {
