@@ -6,14 +6,14 @@ public class Arquivo<G extends Entidade>{
 
     protected RandomAccessFile raf;
     protected RandomAccessFile indice;
-    protected String nome_Arquivo;
+    protected String nomeArquivo;
     protected Constructor<G> construtor;
 
-    public Arquivo(Constructor<G> c, String nome_Arquivo)throws Exception{
-        this.nome_Arquivo = nome_Arquivo;
+    public Arquivo(Constructor<G> c, String nomeArquivo)throws Exception{
+        this.nomeArquivo = nomeArquivo;
         this.construtor   = c;
-        this.raf          = new RandomAccessFile(nome_Arquivo, "rw");
-        this.indice       = new RandomAccessFile("indice.db",  "rw");
+        this.raf          = new RandomAccessFile(nomeArquivo + ".db", "rw");
+        this.indice       = new RandomAccessFile(nomeArquivo + ".idx", "rw");
         if(raf.length() < 4){
             raf.writeInt(0);
             //apagar indice
@@ -25,10 +25,14 @@ public class Arquivo<G extends Entidade>{
         indice.close();
     }
 
+    public int ultimoID() throws Exception {
+        raf.seek(0);
+        return raf.readInt();
+    }
+
     public int inserir(G objeto)throws Exception{
         int ultimoID;
-        raf.seek(0);
-        ultimoID = raf.readInt();
+        ultimoID = this.ultimoID();
         raf.seek(0);
         objeto.setID(ultimoID+1);      
 

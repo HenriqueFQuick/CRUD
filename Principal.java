@@ -5,17 +5,18 @@ public class Principal{
         Scanner read = new Scanner(System.in);
         String nome, descricao, marca, origem;
         float preco;
+        Produto p;
         int id;
         boolean erro;
         boolean result;
         Arquivo<Produto> arq;
         try{
-            arq = new Arquivo<>(Produto.class.getConstructor(), "jonathan.db");
+            arq = new Arquivo<>(Produto.class.getConstructor(), "jonathan");
             boolean fecharMenu = false;
             do{
                 //menu
                 System.out.println("\n\t*** MENU ***");
-                System.out.println("0 - Adicionar produto\n1 - Remover produto\n2 - Alterar produto\n3 - Consultar produto\n4 - Sair");
+                System.out.println("0 - Adicionar produto\n1 - Remover produto\n2 - Alterar produto\n3 - Consultar produto\n4 - Listar produtos cadastrados\n5 - Sair");
                 System.out.print("Digite a opção: ");
                 int opcao = read.nextInt();
                 System.out.println();
@@ -88,13 +89,24 @@ public class Principal{
                             }
                             System.out.println();
                         } while(erro);
-                        Produto p = arq.pesquisar(id);
+                        p = arq.pesquisar(id);
                         if (p != null && p.idProduto != -1 ){
                             System.out.println(p);
                         }
                         else System.out.println("Produto não encontrado!");
                         break;
                     case 4:
+                        System.out.println("\t** Lista dos produtos cadastrados **\n");
+                        for(int i = 1; i <= arq.ultimoID(); i++){
+                            p = arq.pesquisar(i);
+                            if (p != null && p.idProduto != -1 ){
+                                System.out.println(p);
+                                System.out.println();
+                                Thread.sleep(500);
+                            }  
+                        }
+                        break;
+                    case 5:
                         fecharMenu = true;
                         break;
                     default:                    
