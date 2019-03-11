@@ -122,7 +122,7 @@ public class Arquivo<G extends Entidade>{
                 }
             }
             else {
-                System.out.println("Produto foi removido anteriormente");
+                System.out.println("Produto inexistente");
                 return false; 
             }
         }
