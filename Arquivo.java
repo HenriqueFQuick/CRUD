@@ -47,6 +47,8 @@ public class Arquivo<G extends Entidade>{
         raf.seek(0);
         ultimoID = raf.readInt();
         System.out.println(ultimoID);
+
+        
     } 
 
     public G pesquisar(int idqr)throws Exception{
@@ -56,6 +58,7 @@ public class Arquivo<G extends Entidade>{
         //System.out.println(i);
         if(i >= idqr){
             long pos = buscaI(idqr, 0, i);
+            System.out.println(pos);
             if (pos != -1){
                 raf.seek(pos);
                 byte lapide = raf.readByte();
@@ -72,15 +75,21 @@ public class Arquivo<G extends Entidade>{
     }
 
     public long buscaI(int idqr, int esq, int dir) throws Exception{
+        long test = 0;
         if (dir >= esq){
             long meio = ((esq + dir)/2) * 12;
             indice.seek(meio);
             int id = indice.readInt();
-            if(id == idqr) return indice.readLong();
-            else if (id < idqr) buscaI(idqr, ((esq + dir)/2) + 1, dir);
-            else buscaI(idqr, esq, ((esq + dir)/2) - 1 );
+            if(id == idqr){ 
+                test = indice.readLong();
+            }else{   if (id < idqr){ 
+                        test = buscaI(idqr, ((esq + dir)/2) + 1, dir);
+                    }else{ 
+                        test = buscaI(idqr, esq, ((esq + dir)/2) - 1 );
+                    }
+                }
         }
-        return (long) -1;
+            return test;
     }
 
     public ArrayList<G> toList()throws Exception{
@@ -133,11 +142,25 @@ public class Arquivo<G extends Entidade>{
         if(i >= idqr){
             removeu = this.remover(idqr);
             if(removeu){
-                this.inserir(objeto);
-                System.out.println("Novo ID: " + i);
+                this.inserirAlterado(objeto, idqr);
+            }
+        }else System.out.println("Produto inexistente");
+    }
+
+    public void inserirAlterado(G objeto, int idqr)throws Exception{
+        objeto.setID(idqr);
+        indice.seek(0);
+        for(int i = 0; i < indice.length() - 12; i = i + 8){
+            int idIndice = indice.readInt();
+            if(idIndice == idqr){
+                indice.writeLong(raf.length());
             }
         }
-        else System.out.println("Produto inexistente");
+        raf.seek(raf.length());
+        byte[] b = objeto.toByteArray();
+        raf.writeByte(' ');
+        raf.writeShort(b.length);
+        raf.write(b);
     }
 
 }
