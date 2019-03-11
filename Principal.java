@@ -74,7 +74,7 @@ public class Principal{
                             }
                             System.out.println();
                         } while(erro);
-                        Produto p = arq.pesquisarI(id);
+                        Produto p = arq.pesquisar(id);
                         if (p != null && p.idProduto != -1 ){
                             System.out.println(p);
                         }

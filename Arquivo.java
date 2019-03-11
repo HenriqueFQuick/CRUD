@@ -9,7 +9,7 @@ public class Arquivo<G extends Entidade>{
     protected String nome_Arquivo;
     protected Constructor<G> construtor;
 
-    public Arquivo( Constructor<G> c, String nome_Arquivo)throws Exception{
+    public Arquivo(Constructor<G> c, String nome_Arquivo)throws Exception{
         this.nome_Arquivo = nome_Arquivo;
         this.construtor = c;
         this.raf          = new RandomAccessFile(nome_Arquivo, "rw");
@@ -35,7 +35,7 @@ public class Arquivo<G extends Entidade>{
         indice.seek(indice.length());
         indice.writeInt(objeto.getID());
         indice.writeLong(raf.length());
-        
+
         raf.seek(raf.length());
         byte[] b = objeto.toByteArray();
         raf.writeByte(' ');
@@ -49,46 +49,38 @@ public class Arquivo<G extends Entidade>{
         System.out.println(ultimoID);
     } 
 
-    public G pesquisarI(int idqr)throws Exception{
+    public G pesquisar(int idqr)throws Exception{
         raf.seek(0);
         G objeto = null;
         int i = raf.readInt();
         //System.out.println(i);
         if(i >= idqr){
-            long pos = buscaI(i, 1, idqr);
-            raf.seek(pos);
-            byte lapide = raf.readByte();
-            int tamanho = raf.readShort();
-            byte[] b = new byte[tamanho];
-            objeto = construtor.newInstance();
-            if(lapide == ' '){
-                raf.read(b);
-                objeto.fromByteArray(b);
+            long pos = buscaI(idqr, 0, i);
+            if (pos != -1){
+                raf.seek(pos);
+                byte lapide = raf.readByte();
+                int tamanho = raf.readShort();
+                byte[] b = new byte[tamanho];
+                objeto = construtor.newInstance();
+                if(lapide == ' '){
+                    raf.read(b);
+                    objeto.fromByteArray(b);
+                }  
             }
         }
         return objeto;
     }
 
-    public long buscaI(int dir, int esq, int idqr)throws Exception{
-        long ultimo   = (dir/2)*12;
-        long primeiro = (esq/2)*12;
-        long metade   = ((esq/2)+(dir/2))*12;
-        /*System.out.println(esq);
-        System.out.println(dir);
-        System.out.println(primeiro);
-        System.out.println(ultimo);
-        System.out.println(metade);*/
-        indice.seek(metade);
-       // System.out.println("AKI 2");
-        int a = indice.readInt();
-       // System.out.println("Aki 3");
-        if(a == idqr){
-        //    System.out.println("Aki4");
-            return indice.readLong();
+    public long buscaI(int idqr, int esq, int dir) throws Exception{
+        if (dir >= esq){
+            long meio = ((esq + dir)/2) * 12;
+            indice.seek(meio);
+            int id = indice.readInt();
+            if(id == idqr) return indice.readLong();
+            else if (id < idqr) buscaI(idqr, ((esq + dir)/2) + 1, dir);
+            else buscaI(idqr, esq, ((esq + dir)/2) - 1 );
         }
-        else if( a < idqr) buscaI(dir, ((esq+dir)/2) + 1, idqr);
-        else buscaI(((esq+dir)/2) -1, esq, idqr);
-        return 0;
+        return (long) -1;
     }
 
     public ArrayList<G> toList()throws Exception{
@@ -115,7 +107,7 @@ public class Arquivo<G extends Entidade>{
         raf.seek(0);
         int i = raf.readInt();
         if(i >= idqr){
-            long pos = buscaI(i, 0, idqr);
+            long pos = buscaI(idqr, 0, i);
             raf.seek(pos);
             byte lapide = raf.readByte();
             if(lapide == ' '){
@@ -124,14 +116,14 @@ public class Arquivo<G extends Entidade>{
                 System.out.println("Removido com sucesso");
                 return true;
             }else{ 
-               System.out.println("Produto foi removido anteriormente");
-               return false;
-               }
+                System.out.println("Produto foi removido anteriormente");
+                return false;
+            }
         }
         else {
             System.out.println("Produto inexistente");
             return false;
-         }
+        }
     }
 
     public void alterar(int idqr, G objeto)throws Exception{
@@ -141,8 +133,8 @@ public class Arquivo<G extends Entidade>{
         if(i >= idqr){
             removeu = this.remover(idqr);
             if(removeu){
-               this.inserir(objeto);
-               System.out.println("Novo ID: " + i);
+                this.inserir(objeto);
+                System.out.println("Novo ID: " + i);
             }
         }
         else System.out.println("Produto inexistente");
