@@ -7,6 +7,7 @@ public class Principal{
         float preco;
         int id;
         boolean erro;
+        boolean result;
         Arquivo<Produto> arq;
         try{
             arq = new Arquivo<>(Produto.class.getConstructor(), "jonathan.db");
@@ -33,20 +34,31 @@ public class Principal{
                         marca = read.nextLine();
                         System.out.print("Origem do produto: ");
                         origem = read.nextLine();
-                        arq.inserir(new Produto(nome,descricao,preco,marca,origem));
+                        id = arq.inserir(new Produto(nome,descricao,preco,marca,origem));
+                        System.out.println("\nProduto inserido com o ID: " + id);
                         break;
 
                     case 1:
                         System.out.println("\t** Remover produto **\n");
                         System.out.print("ID do produto a ser removido: ");
                         id = read.nextInt();
-                        boolean removeu = arq.remover(id);
+                        result = arq.remover(id);
+                        if(result) System.out.println("Removido com sucesso!");
+                        else System.out.println("Produto não encontrado!");
                         break;
 
                     case 2:
                         System.out.println("\t** Alterar produto **\n");
-                        System.out.print("ID do produto a ser alterado: ");
-                        id = read.nextInt();
+                        do{
+                            erro = false;
+                            System.out.print("ID do produto a ser alterado: ");
+                            id = read.nextInt();
+                            if(id <= 0){
+                                erro = true;
+                                System.out.println("ID Inválida! ");
+                            }
+                            System.out.println();
+                        } while(erro);   
                         System.out.print("Nome do produto: ");
                         nome = read.nextLine();
                         nome = read.nextLine();
@@ -59,7 +71,9 @@ public class Principal{
                         marca = read.nextLine();
                         System.out.print("Origem do produto: ");
                         origem = read.nextLine();
-                        arq.alterar(id, new Produto(nome,descricao,preco,marca,origem));
+                        result = arq.alterar(id, new Produto(nome,descricao,preco,marca,origem));
+                        if(result) System.out.println("Alterado com sucesso!");
+                        else System.out.println("Produto para alterar não encontrado!");
                         break;
 
                     case 3:
