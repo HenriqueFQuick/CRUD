@@ -36,7 +36,7 @@ class Produto implements Entidade{
         this.origem       = origem;
     }//end Produto
 
-    //Retorna um arrayde bytes com os bytes para escrever no arquivo
+    //Retorna um array de bytes com os bytes para escrever no arquivo
     public byte[] toByteArray() throws Exception{
         ByteArrayOutputStream dados = new ByteArrayOutputStream();
         DataOutputStream saida = new DataOutputStream(dados);

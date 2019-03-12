@@ -136,7 +136,7 @@ public class Arquivo<G extends Entidade>{
         return result;
     }//end remover
 
-    //metodo para alterar um objeto( exclui o antigo e adiciona um novo com o mesmo id)
+    //metodo para alterar um objeto (exclui o antigo e adiciona um novo com o mesmo id)
     public boolean alterar(int idqr, G objeto)throws Exception{
         boolean removeu;
         boolean result = false;
@@ -151,7 +151,7 @@ public class Arquivo<G extends Entidade>{
         return result;
     }//end alterar
 
-    //metodo para inserir sesm alterar o id, modificando no indice apenas a posicao do objeto no arquivo
+    //metodo para inserir sem alterar o id, modificando no indice apenas a posicao do objeto no arquivo
     public boolean inserirAlterado(G objeto, int idqr) throws Exception{
         objeto.setID(idqr);
         indice.seek(0);
